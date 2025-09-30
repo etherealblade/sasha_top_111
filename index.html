@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>САША БАЦАРАШКИНА ЛУЧШАЯ!</title>
+  <!-- Шрифт -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+  <!-- Twemoji -->
+  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(-45deg, #ff80bf, #a855f7, #ff4fd8, #9b5fff);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      overflow-x: hidden;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    h1, h2 {
+      text-align: center;
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+    }
+    /* Стартовый экран */
+    #startScreen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+    #startScreen h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    #startScreen h2 {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+    .start-btn {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      margin: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .start-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    /* Основной сайт */
+    #mainContent {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      font-weight: 900;
+      font-size: 2.2rem;
+      color: #fff;
+      margin: 20px 0;
+      border-bottom: 3px solid #fff;
+      padding-bottom: 10px;
+      width: 100%;
+    }
+    .photo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .hearts-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      font-size: 2rem;
+    }
+    .photo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .photo-container img {
+      max-width: 300px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      display: block;
+    }
+    .hearts-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      font-size: 2rem;
+    }
+    .btn {
+      margin: 15px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    #playBtn { background: #9333ea; color: white; }
+    #stopBtn { background: #ef4444; color: white; display: none; }
+    /* Эквалайзер */
+    #visualizer {
+      display: none;
+      margin-top: 15px;
+      height: 50px;
+      width: 100%;
+      max-width: 280px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .bar {
+      flex: 1;
+      margin: 0 2px;
+      background: linear-gradient(to top, #ec4899, #a855f7);
+      border-radius: 4px;
+      height: 5px;
+      transition: height 0.1s ease;
+    }
+  </style>
+</head>
+<body>
+  <!-- Стартовый экран -->
+  <div id="startScreen">
+    <h1>СТОЙ</h1>
+    <h2>ТЫ УВЕРЕН(А) ЧТО ХОЧЕШЬ УВИДЕТЬ ЭТОТ СОК?</h2>
+    <button class="start-btn">ДА</button>
+    <button class="start-btn">ДА</button>
+  </div>
+
+  <!-- Основной сайт -->
+  <div id="mainContent">
+    <h1>САША БАЦАРАШКИНА ЛУЧШАЯ!</h1>
+    <div class="photo-wrapper">
+      <div class="hearts-column">
+        <span>💖</span><span>💖</span><span>💖</span>
+      </div>
+      <div class="photo-container">
+        <img src="assets/photo.jpg" alt="Фото">
+        <div class="hearts-row">
+          <span>💖</span><span>💖</span><span>💖</span>
+        </div>
+      </div>
+      <div class="hearts-column">
+        <span>💖</span><span>💖</span><span>💖</span>
+      </div>
+    </div>
+
+    <!-- Музыка -->
+    <audio id="bgMusic" loop>
+      <source src="assets/music.mp3" type="audio/mpeg">
+      Ваш браузер не поддерживает аудио.
+    </audio>
+
+    <!-- Кнопки -->
+    <button id="playBtn" class="btn">Включить музыку 🎶</button>
+    <button id="stopBtn" class="btn">Остановить музыку ⏹️</button>
+
+    <!-- Эквалайзер -->
+    <div id="visualizer">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <script>
+    // эмодзи в стиле iOS
+    window.onload = () => {
+      twemoji.parse(document.body, {folder: 'svg', ext: '.svg'});
+    };
+
+    // Стартовый экран → основной сайт
+    const startBtns = document.querySelectorAll(".start-btn");
+    const startScreen = document.getElementById("startScreen");
+    const mainContent = document.getElementById("mainContent");
+
+    startBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        startScreen.style.display = "none";
+        mainContent.style.display = "flex";
+        twemoji.parse(document.body, {folder: 'svg', ext: '.svg'});
+      });
+    });
+
+    // Музыка + эквалайзер
+    const playBtn = document.getElementById("playBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const music = document.getElementById("bgMusic");
+    const visualizer = document.getElementById("visualizer");
+    const bars = document.querySelectorAll(".bar");
+
+    let audioCtx, analyser, source, dataArray, animationId;
+
+    function setupAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        source = audioCtx.createMediaElementSource(music);
+        source.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        analyser.fftSize = 64;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+      }
+    }
+
+    function animateVisualizer() {
+      analyser.getByteFrequencyData(dataArray);
+      bars.forEach((bar, i) => {
+        const value = dataArray[i] || 0;
+        const height = Math.max(5, value / 2);
+        bar.style.height = `${height}px`;
+      });
+      animationId = requestAnimationFrame(animateVisualizer);
+    }
+
+    playBtn.addEventListener("click", async () => {
+      setupAudio();
+      try {
+        await audioCtx.resume();
+        await music.play();
+        playBtn.style.display = "none";
+        stopBtn.style.display = "inline-block";
+        visualizer.style.display = "flex";
+        animateVisualizer();
+      } catch (e) {
+        alert("Не удалось воспроизвести музыку: " + e.message);
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      music.pause();
+      stopBtn.style.display = "none";
+      playBtn.style.display = "inline-block";
+      visualizer.style.display = "none";
+      cancelAnimationFrame(animationId);
+    });
+  </script>
+</body>
+</html>
