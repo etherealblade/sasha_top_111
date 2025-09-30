@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>САША БАЦАРАШКИНА ЛУЧШАЯ!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+  <style>
+    /* 🌌 Фон */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background: linear-gradient(270deg, #a855f7, #ec4899, #f9fafb);
+      background-size: 600% 600%;
+      animation: gradientBG 15s ease infinite;
+      font-family: Arial, sans-serif;
+    }
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    /* ✨ Заголовок */
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      text-align: center;
+      color: white;
+      margin: 20px 0;
+      padding-bottom: 10px;
+      width: 100%;
+      text-shadow: 0 0 10px #a855f7, 0 0 20px #ec4899, 0 0 30px #a855f7;
+    }
+
+    /* 📸 Фото и сердечки */
+    .photo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .hearts-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      font-size: 1.8rem;
+    }
+    .photo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .photo-container img {
+      max-width: 300px;
+      border-radius: 12px;
+      display: block;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    }
+    .hearts-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      font-size: 1.8rem;
+    }
+    /* 💖 Анимация сердечек */
+    .hearts-column span, .hearts-row span {
+      animation: heartbeat 1.5s infinite;
+    }
+    @keyframes heartbeat {
+      0%, 100% {transform: scale(1);}
+      50% {transform: scale(1.3);}
+    }
+
+    /* 🕹 Кнопки */
+    .btn {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #playBtn {
+      background: #a855f7;
+      color: white;
+    }
+    #stopBtn {
+      background: #ef4444;
+      color: white;
+      display: none;
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    }
+
+    /* 🎶 Визуализатор */
+    #visualizer {
+      margin-top: 15px;
+      width: 200px;
+      height: 20px;
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      border-radius: 10px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.05s linear;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>САША БАЦАРАШКИНА ЛУЧШАЯ!</h1>
+
+  <div class="photo-wrapper">
+    <div class="hearts-column">
+      <span>💖</span><span>💖</span><span>💖</span>
+    </div>
+    <div class="photo-container">
+      <img src="assets/photo.jpg" alt="Фото">
+      <div class="hearts-row">
+        <span>💖</span><span>💖</span><span>💖</span>
+      </div>
+    </div>
+    <div class="hearts-column">
+      <span>💖</span><span>💖</span><span>💖</span>
+    </div>
+  </div>
+
+  <!-- 🎵 Музыка -->
+  <audio id="bgMusic" loop>
+    <source src="assets/music.mp3" type="audio/mpeg">
+    Ваш браузер не поддерживает аудио.
+  </audio>
+
+  <!-- 🕹 Кнопки -->
+  <button id="playBtn" class="btn">Включить музыку 🎶</button>
+  <button id="stopBtn" class="btn">Остановить музыку ⏹️</button>
+
+  <!-- 📊 Пульсатор -->
+  <div id="visualizer"></div>
+
+  <script>
+    // эмодзи в стиле iOS
+    window.onload = () => {
+      twemoji.parse(document.body, {folder: 'svg', ext: '.svg'});
+    };
+
+    const playBtn = document.getElementById("playBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const music = document.getElementById("bgMusic");
+    const visualizer = document.getElementById("visualizer");
+
+    let audioCtx, analyser, source, dataArray, animationId;
+
+    function setupAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        source = audioCtx.createMediaElementSource(music);
+        source.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        analyser.fftSize = 256;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+      }
+    }
+
+    function animateVisualizer() {
+      analyser.getByteFrequencyData(dataArray);
+      let sum = 0;
+      for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+      const avg = sum / dataArray.length;
+      const scale = Math.min(1, avg / 128);
+      visualizer.style.transform = `scaleX(${scale})`;
+      animationId = requestAnimationFrame(animateVisualizer);
+    }
+
+    playBtn.addEventListener("click", async () => {
+      setupAudio();
+      try {
+        await audioCtx.resume();
+        await music.play();
+        playBtn.style.display = "none";
+        stopBtn.style.display = "inline-block";
+        visualizer.style.display = "block";
+        animateVisualizer();
+      } catch (e) {
+        alert("Музыка не может быть воспроизведена: " + e.message);
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      music.pause();
+      stopBtn.style.display = "none";
+      playBtn.style.display = "inline-block";
+      visualizer.style.display = "none";
+      cancelAnimationFrame(animationId);
+    });
+  </script>
+</body>
+</html>
